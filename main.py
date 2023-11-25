@@ -1,4 +1,4 @@
-# Multiplayer Pong Player 1
+# Multiplayer Pong
 paddle_x = 0
 paddle_y = 0
 ball_x = 0
@@ -12,16 +12,16 @@ is_displaying_score = False
 is_controller_enabled = False
 
 is_connected = False
+host = False
 
 MAX_POINTS = 3
 
-
-host = False
 
 def draw_paddle(paddle_x, paddle_y):
     led.plot(paddle_x - 1, paddle_y)
     led.plot(paddle_x, paddle_y)
     led.plot(paddle_x + 1, paddle_y)
+
 
 def move_paddle(direction):
     global paddle_x, paddle_y, is_controller_enabled
@@ -33,10 +33,12 @@ def move_paddle(direction):
     paddle_x = max(0, min(paddle_x, 4))
     draw_paddle(paddle_x, paddle_y)
 
+
 def reset_paddle():
     global paddle_x, paddle_y
     paddle_x = 2
     paddle_y = 4
+
 
 def on_button_pressed_a():
     global is_connected, host
@@ -45,9 +47,11 @@ def on_button_pressed_a():
     move_paddle(-1)
 input.on_button_pressed(Button.A, on_button_pressed_a)
 
+
 def on_button_pressed_b():    
     move_paddle(1)
 input.on_button_pressed(Button.B, on_button_pressed_b)
+
 
 def move_ball():
     global ball_x, ball_y, ball_x_dir, ball_y_dir, paddle_x, paddle_y
@@ -74,6 +78,7 @@ def reset_ball():
     ball_y = 3
     ball_y_dir = -1
 
+
 def display_score():
     global my_score, is_controller_enabled, is_displaying_score
     is_displaying_score = True
@@ -88,6 +93,7 @@ def display_score():
     is_controller_enabled = True
     is_displaying_score = False
 
+
 def display_lose():
     global is_controller_enabled
     is_controller_enabled = False
@@ -100,6 +106,7 @@ def display_lose():
             # . . . #
         """)
     basic.pause(3000)
+
 
 def display_win():
     global is_controller_enabled
@@ -129,8 +136,6 @@ def on_received_value(name, value):
             ball_x_dir = -1
         ball_y = -1
         ball_y_dir = 1
-        
-    pass
 radio.on_received_value(on_received_value)
 
 
@@ -152,8 +157,8 @@ def on_radio_received_string(received_str):
         reset_paddle()
     elif received_str == "GAME_OVER":
         is_playing = False
-    
 radio.on_received_string(on_radio_received_string)
+
 
 basic.show_string("PONG!")
 basic.show_leds("""
@@ -163,6 +168,8 @@ basic.show_leds("""
         . # . . .
         . . # . .
     """)
+
+
 def on_forever():
     global paddle_x, paddle_y, ball_x, ball_y, ball_x_dir, ball_y_dir, my_score, their_score, is_connected, host, is_playing, is_controller_enabled, MAX_POINTS, is_displaying_score
     
@@ -216,9 +223,8 @@ def on_forever():
         if ball_y == -1:
             radio.send_value("BALL", ball_x_dir)
 
-
     # game over
-    # Wait for the score to stop being displayed
+    # wait for the score to stop being displayed
     while is_displaying_score:
         basic.pause(50)
     if my_score >= MAX_POINTS:

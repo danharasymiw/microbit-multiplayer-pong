@@ -1,4 +1,4 @@
-//  Multiplayer Pong Player 1
+//  Multiplayer Pong
 let paddle_x = 0
 let paddle_y = 0
 let ball_x = 0
@@ -11,8 +11,8 @@ let is_playing = false
 let is_displaying_score = false
 let is_controller_enabled = false
 let is_connected = false
-let MAX_POINTS = 3
 let host = false
+let MAX_POINTS = 3
 function draw_paddle(paddle_x: number, paddle_y: number) {
     led.plot(paddle_x - 1, paddle_y)
     led.plot(paddle_x, paddle_y)
@@ -133,7 +133,6 @@ radio.onReceivedValue(function on_received_value(name: string, value: number) {
         ball_y_dir = 1
     }
     
-    
 })
 function connect() {
     radio.sendString("PING")
@@ -222,7 +221,7 @@ basic.forever(function on_forever() {
         
     }
     //  game over
-    //  Wait for the score to stop being displayed
+    //  wait for the score to stop being displayed
     while (is_displaying_score) {
         basic.pause(50)
     }
